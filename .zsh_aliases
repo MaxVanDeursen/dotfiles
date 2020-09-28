@@ -1,2 +1,2 @@
-alias ls="ls --color=auto -h"
+alias ls="ls --color=always -h"
 alias grep="grep --color=always"
