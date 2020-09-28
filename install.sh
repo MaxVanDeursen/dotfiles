@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACKAGES=(zsh git) # Packages to be installed.
-FILES=(.zshrc .zsh_aliases) # Files to symlink into home directory.
+FILES=(.zshrc .zsh_aliases .zsh_functions .zsh) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.
@@ -35,11 +35,13 @@ if [ $BACKUP = true ] ; then
     mkdir "$BACKUP_DIR"
 fi
 for file in "${FILES[@]}"; do
-    if [ -f "$HOME/$file" ] && [ $BACKUP = true ]; then
-        mv "$HOME/$file" "$BACKUP_DIR"
-        echo "$file backed up" >> "$LOG_FILE"
-    else
-        rm "$HOME/$file"
+    if [ -f "$HOME/$file" ] ; then
+        if [ $BACKUP = true ]; then
+            mv "$HOME/$file" "$BACKUP_DIR"
+            echo "$file backed up" >> "$LOG_FILE"
+        else
+            rm "$HOME/$file"
+        fi
     fi
     ln -s "$DIRECTORY/$file" "$HOME/$file" 
     echo "$file linked to home folder" >> "$LOG_FILE"
