@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-PACKAGES=(zsh git) # Packages to be installed.
-FILES=(.zshrc .zsh_aliases .zsh_functions .zsh .gitconfig .vimrc) # Files to symlink into home directory.
+PACKAGES=(zsh git tmux) # Packages to be installed.
+FILES=(.tmux.conf .gitconfig .vim .zsh .zsh_aliases .zsh_functions .zshrc) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.
@@ -23,7 +23,7 @@ for package in "${PACKAGES[@]}";
 do
     sudo apt-get -y install $package
     if type -p zsh > /dev/null; then
-        echo "$package installed" >> "$LOG_FILE" 
+        echo "$package installed" | tee "$LOG_FILE"
     else
         echo "$package failed to install... Quitting"
         exit 1
@@ -35,14 +35,15 @@ if [ $BACKUP = true ] ; then
     mkdir "$BACKUP_DIR"
 fi
 for file in "${FILES[@]}"; do
-    if [ -f "$HOME/$file" ] ; then
+    if [ -L "$HOME/$file" ] ; then
         if [ $BACKUP = true ]; then
             mv "$HOME/$file" "$BACKUP_DIR"
-            echo "$file backed up" >> "$LOG_FILE"
+            echo "$HOME/$file backed up into $BACKUP_DIR" | tee "$LOG_FILE"
         else
             rm "$HOME/$file"
+            echo "$HOME/$file removed" | tee "$LOG_FILE"
         fi
     fi
     ln -s "$DIRECTORY/$file" "$HOME/$file" 
-    echo "$file linked to home folder" >> "$LOG_FILE"
+    echo "$DIRECTORY/$file linked to $HOME/$file" | tee "$LOG_FILE"
 done
