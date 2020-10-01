@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACKAGES=(zsh git) # Packages to be installed.
-FILES=(.zshrc .zsh_aliases .zsh_functions .zsh) # Files to symlink into home directory.
+FILES=(.zshrc .zsh_aliases .zsh_functions .zsh .gitconfig .vimrc) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.

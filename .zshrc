@@ -14,7 +14,6 @@ USER='%F{red}[%F{white}%n%F{red}@%F{white}%m%F{red}]%f%k'
 GIT='$(prompt_git)'
 TIME='%F{red}[%F{white}%*%F{red}]%f%k'
 DIR='%F{red}[%F{white}%(2~|.../%1~|%~)%F{red}]%f%k'
-NEWLINE=$'\n'
 PS1="$USER%F{red}-$DIR$GIT%F{red}->%f%k "
 
 # Vim bindings
@@ -38,9 +37,6 @@ unsetopt HIST_BEEP
 # Complete at the first match when there are ambiguous definitions
 setopt MENU_COMPLETE
 
-# Always use floats, which removes integer division.
-setopt FORCE_FLOAT
-
 # Make pattern matching and globbing case insensitive.
 unsetopt CASE_GLOB
 unsetopt CASE_MATCH
@@ -59,8 +55,7 @@ SAVEHIST=100000000
 # Third party plugins
 # Automatic suggestions whilst typing commands
 # CTRL+SPACE=Accept, ALT+ENTER=Execute
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=red,bold"
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-TERM=xterm-256color
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=1'
 bindkey '^ ' autosuggest-accept
 bindkey '^[^M' autosuggest-execute
