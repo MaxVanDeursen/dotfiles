@@ -47,3 +47,4 @@ for file in "${FILES[@]}"; do
     ln -s "$DIRECTORY/$file" "$HOME/$file" 
     echo "$DIRECTORY/$file linked to $HOME/$file" | tee "$LOG_FILE"
 done
+chsh -s $(which zsh)
