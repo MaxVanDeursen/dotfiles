@@ -16,6 +16,12 @@ let $RTP=split(&runtimepath, ",")[0]
 " Quick environment variable to get to this .vimrc file.
 let $RC="$HOME/.vim/vimrc"
 
-" Old settings
-"" set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
-"" au filetype gitcommit set textwidth=72
+" Turn on incremental search and highlight the results
+set hlsearch
+set incsearch
+
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+au filetype gitcommit set textwidth=72
+
+set number
+set background=dark

@@ -2,6 +2,7 @@
 source ~/.zsh_aliases
 source ~/.zsh_functions
 
+export PATH=/home/max/.local/bin:$PATH
 # Prompt
 prompt_git () {
     BRANCH="$(git branch --show-current 2> /dev/null)"
@@ -58,4 +59,4 @@ SAVEHIST=100000000
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=red,bold"
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^ ' autosuggest-accept
-bindkey '^[^M' autosuggest-execute
+bindkey '^R' autosuggest-execute
