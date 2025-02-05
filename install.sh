@@ -17,11 +17,22 @@ done
 
 echo "This script requires ROOT permissions to install packages"
 
+PACKAGE_MANAGER="brew"
+if command -v apt-get 2>&1 >/dev/null
+then
+    # Use apt-get as package manager.
+    PACKAGE_MANAGER="apt-get -y"
+elif ! command -v brew 2>&1 >/dev/null
+then
+    # Download "brew" and use it.
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
 # Install all package within $PACKAGES.
 echo "Installing required packages. These consist of the following packages: (${PACKAGES[@]})"
 for package in "${PACKAGES[@]}";
 do
-    sudo apt-get -y install $package
+    eval $PACKAGE_MANAGER install $package
     if type -p zsh > /dev/null; then
         echo "$package installed" | tee "$LOG_FILE"
     else
@@ -35,7 +46,7 @@ if [ $BACKUP = true ] ; then
     mkdir "$BACKUP_DIR"
 fi
 for file in "${FILES[@]}"; do
-    if [ -L "$HOME/$file" ] ; then
+    if [ -e "$HOME/$file" ] ; then
         if [ $BACKUP = true ]; then
             mv "$HOME/$file" "$BACKUP_DIR"
             echo "$HOME/$file backed up into $BACKUP_DIR" | tee "$LOG_FILE"
@@ -47,4 +58,18 @@ for file in "${FILES[@]}"; do
     ln -s "$DIRECTORY/$file" "$HOME/$file" 
     echo "$DIRECTORY/$file linked to $HOME/$file" | tee "$LOG_FILE"
 done
+
+if [ -e "$HOME/.config/nvim" ] ; then
+    if [ $BACKUP = true ] ; then
+        mv "$HOME/.config/nvim" "$BACKUP_DIR"
+        echo "$HOME/$file backed up into $BACKUP_DIR" | tee "$LOG_FILE"
+    else
+        rm -r "$HOME/.config/nvim"
+        echo "$HOME/.config/nvim removed" | tee "$LOG_FILE"
+    fi
+fi
+mkdir -p $HOME/.config
+ln -s "$DIRECTORY/nvim" "$HOME/.config/nvim"
+echo "$DIRECTORY/nvim linked to $HOME/.config/nvim" | tee "$LOG_FILE"
+
 chsh -s $(which zsh)
