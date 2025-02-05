@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACKAGES=(zsh git tmux) # Packages to be installed.
-FILES=(.tmux.conf .gitconfig .vim .zsh .zsh_aliases .zsh_functions .zshrc) # Files to symlink into home directory.
+FILES=(.gitconfig .vim .zsh .zsh_aliases .zsh_functions .zshrc) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.
