@@ -51,12 +51,3 @@ setopt INC_APPEND_HISTORY
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000000
 SAVEHIST=100000000
-
-
-# Third party plugins
-# Automatic suggestions whilst typing commands
-# CTRL+SPACE=Accept, ALT+ENTER=Execute
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=red,bold"
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '^ ' autosuggest-accept
-bindkey '^R' autosuggest-execute
