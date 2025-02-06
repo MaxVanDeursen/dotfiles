@@ -1,0 +1,3 @@
+zsh/aliases.zsh=.zsh_aliases
+zsh/functions.zsh=.zsh_functions
+zsh/rc.zsh=.zshrc

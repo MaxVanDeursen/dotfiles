@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACKAGES=(zsh git tmux) # Packages to be installed.
-FILES=(.gitconfig .zsh .zsh_aliases .zsh_functions .zshrc) # Files to symlink into home directory.
+SYMLINK_DIRECTORIES=(git nvim zsh) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.
@@ -14,8 +14,6 @@ while getopts "l:b" opt; do
         \?) echo "Unknown argument"
     esac
 done
-
-echo "This script requires ROOT permissions to install packages"
 
 PACKAGE_MANAGER="brew"
 if command -v apt-get 2>&1 >/dev/null
@@ -42,34 +40,39 @@ do
 done
 
 # Symlink dotfiles, making backups if set.
+link_file() {
+    local source=$1
+    local destination=$2
+    if [ -f "$destination" ] || [ -d "$destination" ] || [ -L "$destination" ]
+    then
+        local currentSource="$(readlink $destination)"
+	if [ "$source" == "$currentSource" ]
+	then
+	    return
+        elif [ $BACKUP = true ]
+        then
+            mv "$destination" "$BACKUP_DIR"
+            echo "$destination backed up into $BACKUP_DIR" | tee "$LOG_FILE"
+        else
+            rm -rf "$destination"
+            echo "$destination removed" | tee "$LOG_FILE"
+	fi
+    fi
+    ln -s "$source" "$destination" 
+    echo "$source linked to $destination" | tee "$LOG_FILE"
+
+}
 if [ $BACKUP = true ] ; then
     mkdir "$BACKUP_DIR"
 fi
-for file in "${FILES[@]}"; do
-    if [ -e "$HOME/$file" ] ; then
-        if [ $BACKUP = true ]; then
-            mv "$HOME/$file" "$BACKUP_DIR"
-            echo "$HOME/$file backed up into $BACKUP_DIR" | tee "$LOG_FILE"
-        else
-            rm "$HOME/$file"
-            echo "$HOME/$file removed" | tee "$LOG_FILE"
-        fi
-    fi
-    ln -s "$DIRECTORY/$file" "$HOME/$file" 
-    echo "$DIRECTORY/$file linked to $HOME/$file" | tee "$LOG_FILE"
+
+find -H "$DIRECTORY" -maxdepth 2 -name "links.prop" -not -path "*.git" | while read linkPropertyFile
+do
+    cat "$linkPropertyFile" | while read line
+    do
+        source=$(echo "$line" | cut -d '=' -f 1)
+        destination=$(echo "$line" | cut -d '=' -f 2)
+	mkdir -p "$(dirname $HOME/$destination)"
+	link_file "$DIRECTORY/$source" "$HOME/$destination"
+    done
 done
-
-if [ -e "$HOME/.config/nvim" ] ; then
-    if [ $BACKUP = true ] ; then
-        mv "$HOME/.config/nvim" "$BACKUP_DIR"
-        echo "$HOME/$file backed up into $BACKUP_DIR" | tee "$LOG_FILE"
-    else
-        rm -r "$HOME/.config/nvim"
-        echo "$HOME/.config/nvim removed" | tee "$LOG_FILE"
-    fi
-fi
-mkdir -p $HOME/.config
-ln -s "$DIRECTORY/nvim" "$HOME/.config/nvim"
-echo "$DIRECTORY/nvim linked to $HOME/.config/nvim" | tee "$LOG_FILE"
-
-chsh -s $(which zsh)
