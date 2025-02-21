@@ -10,9 +10,13 @@ return {
   },
   config = function()
     require("telescope").setup {
+      defaults = {
+        file_ignore_patterns = { "^.git/" },
+      },
       pickers = {
         find_files = {
-          theme = "ivy"
+          theme = "ivy",
+          hidden = true,
         }
       },
       extensions = {
