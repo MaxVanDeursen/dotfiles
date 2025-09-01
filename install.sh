@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PACKAGES=(zsh git tmux) # Packages to be installed.
+PACKAGES=(zsh git tmux nvm fzf nvim) # Packages to be installed.
 SYMLINK_DIRECTORIES=(git nvim zsh) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.

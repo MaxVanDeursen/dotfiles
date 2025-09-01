@@ -2,7 +2,7 @@
 source ~/.zsh_aliases
 source ~/.zsh_functions
 
-export PATH=/home/max/.local/bin:$PATH
+export PATH=/opt/homebrew/opt/openjdk/bin:/home/max/.local/bin:$PATH
 # Prompt
 prompt_git () {
     BRANCH="$(git branch --show-current 2> /dev/null)"
@@ -51,3 +51,7 @@ setopt INC_APPEND_HISTORY
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000000
 SAVEHIST=100000000
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
