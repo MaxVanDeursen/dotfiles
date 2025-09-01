@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-PACKAGES=(zsh git tmux nvm fzf nvim) # Packages to be installed.
+PACKAGES=(zsh git tmux fzf gettext cmake curl ripgrep luarocks python3) # Packages to be installed.
+APT_PACKAGES=("${PACKAGES[@]}" ninja-build build-essential fd-find)
+BREW_PACKAGES=("${PACKAGES[@]}" ninja curl-ca-bundle fd)
+
 SYMLINK_DIRECTORIES=(git nvim zsh) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
@@ -76,3 +79,8 @@ do
 	link_file "$DIRECTORY/$source" "$HOME/$destination"
     done
 done
+
+git clone --depth 1 https://github.com/neovim/neovim
+cd neovim
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+make install
