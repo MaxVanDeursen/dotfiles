@@ -26,25 +26,25 @@ return {
 
     require("telescope").load_extension("fzf")
 
+    local builtin = require "telescope.builtin"
+
     -- Fuzzy find files from current working directory.
-    vim.keymap.set("n", "<space>fd", require("telescope.builtin").find_files)
+    vim.keymap.set("n", "<space>fd", builtin.find_files)
+    vim.keymap.set("n", "<space>fg", builtin.find_files)
 
     -- Fuzzy find help tags.
-    vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
-
-    -- Find current references to text under cursor.
-    vim.keymap.set("n", "<space>fr", require("telescope.builtin").lsp_references)
+    vim.keymap.set("n", "<space>fh", builtin.help_tags)
 
     -- Fuzzy find files in configuration.
     vim.keymap.set("n", "<space>en", function()
-      require("telescope.builtin").find_files {
+      builtin.find_files {
         cwd = vim.fn.stdpath("config")
       }
     end)
 
     vim.keymap.set("n", "<space>ep", function()
-      require("telescope.builtin").find_files {
-        cwd = vim.fs.joinpath(vim.fn.stdpath("data")[0], "lazy")
+      builtin.find_files {
+        cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
       }
     end)
 

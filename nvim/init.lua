@@ -21,8 +21,8 @@ vim.opt.number = true
 vim.opt.clipboard = "unnamedplus"
 
 -- Navigate to next and previous option in quicklist.
-vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
-vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+vim.keymap.set("n", "<leader>qk", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<leader>qj", "<cmd>cprev<CR>")
 
 vim.api.nvim_create_autocmd("TermOpen", {
   group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
@@ -48,3 +48,4 @@ vim.g.netrw_banner = 0
 vim.g.netrw_altv = 1
 vim.g.netrw_winsize = 25
 vim.g.netrw_preview = 1
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
