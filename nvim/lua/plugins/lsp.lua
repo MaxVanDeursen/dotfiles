@@ -10,11 +10,25 @@ return {
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
           }
         }
-      }
+      },
+      { "mason-org/mason.nvim", opts = {} },
+      "mason-org/mason-lspconfig.nvim",
+      { "j-hui/fidget.nvim",    opts = {} },
     },
     config = function()
-      require("lspconfig").lua_ls.setup {}
-      require("lspconfig").csharp_ls.setup {}
+      local servers = {
+        ["lua_ls"] = {},
+      }
+
+      require("mason-lspconfig").setup {
+        ensure_installed = vim.tbl_keys(servers),
+        handlers = {
+          function(server_name)
+            local configuration = servers[server_name]
+            require("lspconfig")[server_name].setup(configuration)
+          end
+        }
+      }
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)

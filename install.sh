@@ -2,7 +2,7 @@
 
 PACKAGES=(zsh git tmux fzf gettext cmake curl ripgrep luarocks python3) # Packages to be installed.
 APT_PACKAGES=("${PACKAGES[@]}" ninja-build build-essential fd-find)
-BREW_PACKAGES=("${PACKAGES[@]}" ninja curl-ca-bundle fd)
+BREW_PACKAGES=("${PACKAGES[@]}" ninja fd)
 
 SYMLINK_DIRECTORIES=(git nvim zsh) # Files to symlink into home directory.
 
@@ -18,11 +18,13 @@ while getopts "l:b" opt; do
     esac
 done
 
+INSTALL_PACKAGES=(${BREW_PACKAGES[@]})
 PACKAGE_MANAGER="brew"
 if command -v apt-get 2>&1 >/dev/null
 then
     # Use apt-get as package manager.
     PACKAGE_MANAGER="apt-get -y"
+    INSTALL_PACKAGES=(${APT_PACKAGES[@]})
 elif ! command -v brew 2>&1 >/dev/null
 then
     # Download "brew" and use it.
@@ -30,8 +32,8 @@ then
 fi
 
 # Install all package within $PACKAGES.
-echo "Installing required packages. These consist of the following packages: (${PACKAGES[@]})"
-for package in "${PACKAGES[@]}";
+echo "Installing required packages. These consist of the following packages: (${INSTALL_PACKAGES[@]})"
+for package in "${INSTALL_PACKAGES[@]}";
 do
     eval $PACKAGE_MANAGER install $package
     if type -p zsh > /dev/null; then
@@ -80,7 +82,9 @@ do
     done
 done
 
+# Build and install Neovim.
 git clone --depth 1 https://github.com/neovim/neovim
 cd neovim
+git pull
 make CMAKE_BUILD_TYPE=RelWithDebInfo
-make install
+sudo make install

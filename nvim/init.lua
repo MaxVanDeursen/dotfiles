@@ -39,3 +39,12 @@ vim.keymap.set("n", "<space>st", function()
 end)
 -- Remap escape to go to normal mode
 vim.cmd("tnoremap <Esc> <C-\\><C-n>")
+
+-- NetRW options (:Ex)
+-- Set the style for netrw to tree
+vim.g.netrw_liststyle = 3
+-- Remove the banner of netrw
+vim.g.netrw_banner = 0
+vim.g.netrw_altv = 1
+vim.g.netrw_winsize = 25
+vim.g.netrw_preview = 1

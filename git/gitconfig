@@ -1,5 +1,8 @@
-[user]
-    name = Max van Deursen
-    email = mvandeursen1996@gmail.com
 [core]
-    editor = nvim
+editor = nvim
+
+[includeIf "gitdir:~/git/"]
+path = .gitconfig-dignitas
+
+[includeIf "gitdir:~/git/personal/"]
+path = .gitconfig-personal
