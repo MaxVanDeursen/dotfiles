@@ -30,7 +30,7 @@ return {
 
     -- Fuzzy find files from current working directory.
     vim.keymap.set("n", "<space>fd", builtin.find_files)
-    vim.keymap.set("n", "<space>fg", builtin.find_files)
+    vim.keymap.set("n", "<space>fp", builtin.git_files)
 
     -- Fuzzy find help tags.
     vim.keymap.set("n", "<space>fh", builtin.help_tags)

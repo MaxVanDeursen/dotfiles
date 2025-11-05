@@ -18,6 +18,7 @@ return {
     config = function()
       local servers = {
         ["lua_ls"] = {},
+        ["jdtls"] = {}
       }
 
       require("mason-lspconfig").setup {
