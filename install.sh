@@ -34,16 +34,6 @@ then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# Install NVM
-export NVM_DIR="$HOME/.nvm"
-if [ ! -d "$NVM_DIR" ]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-fi
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install --lts
-nvm use --lts
-npm install -g @anthropic-ai/claude-code
-
 # Install all package within $PACKAGES.
 echo "Installing required packages. These consist of the following packages: (${INSTALL_PACKAGES[@]})"
 for package in "${INSTALL_PACKAGES[@]}";
@@ -93,6 +83,19 @@ do
 	link_file "$DIRECTORY/$source" "$HOME/$destination"
     done
 done
+
+# Install pnpm, Node LTS, and Claude Code.
+if ! command -v pnpm >/dev/null 2>&1; then
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+fi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export PNPM_HOME="$HOME/Library/pnpm"
+else
+    export PNPM_HOME="$HOME/.local/share/pnpm"
+fi
+export PATH="$PNPM_HOME:$PATH"
+pnpm env use --global lts
+pnpm add -g @anthropic-ai/claude-code
 
 # Build and install Neovim.
 if [ ! -d "$DIRECTORY/neovim" ]; then
