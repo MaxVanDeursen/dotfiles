@@ -6,3 +6,5 @@ path = .gitconfig-dignitas
 
 [includeIf "gitdir:~/git/personal/"]
 path = .gitconfig-personal
+[init]
+	defaultBranch = trunk

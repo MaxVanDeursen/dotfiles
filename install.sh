@@ -2,9 +2,9 @@
 
 PACKAGES=(zsh git tmux fzf gettext cmake curl ripgrep luarocks python3) # Packages to be installed.
 APT_PACKAGES=("${PACKAGES[@]}" ninja-build build-essential fd-find)
-BREW_PACKAGES=("${PACKAGES[@]}" ninja fd)
+BREW_PACKAGES=("${PACKAGES[@]}" ninja fd opencode)
 
-SYMLINK_DIRECTORIES=(git nvim zsh) # Files to symlink into home directory.
+SYMLINK_DIRECTORIES=(git nvim zsh tmux) # Files to symlink into home directory.
 
 DIRECTORY=$(dirname $(realpath $BASH_SOURCE)) # Directory in which this file resides.
 LOG_FILE=dotfile_installation.log # Filename of the log created during execution.
@@ -18,25 +18,37 @@ while getopts "l:b" opt; do
     esac
 done
 
+SUDO=""
+[ "$(id -u)" -ne 0 ] && SUDO="sudo"
+
 INSTALL_PACKAGES=(${BREW_PACKAGES[@]})
 PACKAGE_MANAGER="brew"
-if command -v apt-get 2>&1 >/dev/null
+if command -v apt-get >/dev/null 2>&1
 then
     # Use apt-get as package manager.
     PACKAGE_MANAGER="apt-get -y"
     INSTALL_PACKAGES=(${APT_PACKAGES[@]})
-elif ! command -v brew 2>&1 >/dev/null
+elif ! command -v brew >/dev/null 2>&1
 then
     # Download "brew" and use it.
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+# Install NVM
+export NVM_DIR="$HOME/.nvm"
+if [ ! -d "$NVM_DIR" ]; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+fi
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install --lts
+nvm use --lts
+npm install -g @anthropic-ai/claude-code
+
 # Install all package within $PACKAGES.
 echo "Installing required packages. These consist of the following packages: (${INSTALL_PACKAGES[@]})"
 for package in "${INSTALL_PACKAGES[@]}";
 do
-    eval $PACKAGE_MANAGER install $package
-    if type -p zsh > /dev/null; then
+    if eval $PACKAGE_MANAGER install $package; then
         echo "$package installed" | tee "$LOG_FILE"
     else
         echo "$package failed to install... Quitting"
@@ -83,8 +95,11 @@ do
 done
 
 # Build and install Neovim.
-git clone --depth 1 https://github.com/neovim/neovim
-cd neovim
+if [ ! -d "$DIRECTORY/neovim" ]; then
+    git clone --depth 1 https://github.com/neovim/neovim "$DIRECTORY/neovim"
+fi
+cd "$DIRECTORY/neovim"
 git pull
+rm -rf build/
 make CMAKE_BUILD_TYPE=RelWithDebInfo
-sudo make install
+$SUDO make install

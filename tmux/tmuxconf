@@ -1,0 +1,8 @@
+set -g default-terminal "tmux-256color"
+setw -g mode-keys vi
+
+# If the pane changes to nvim, send ':checktime' command to the nvim pane.
+set-hook -g window-pane-changed "if-shell \"[ '#{pane_current_command}' == 'nvim' ]\" \"send-keys :checktime C-m\"" 
+
+# Press 'prefix + R' to reset the current session layout by running the setup script.
+bind R run-shell "~/.dotfiles/tmux/setup-session.sh #{session_id}"
